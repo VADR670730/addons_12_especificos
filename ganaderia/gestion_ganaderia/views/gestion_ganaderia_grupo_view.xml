@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    © 2019 jhformatic & Pereira
+    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+ -->
+<odoo>
+    <!-- Subscriptions -->
+    <record id="ganaderia_grupo_view_search" model="ir.ui.view">
+        <field name="name">ganaderia.grupo.search</field>
+        <field name="model">ganaderia.grupo</field>
+        <field name="arch" type="xml">
+            <search string="Grupos AAnimales">
+                <field name="name" string="Grupo"/>
+                <field name="inicio"/>
+                <field name="fin"/>
+                <filter name="Activo" string="Activo" domain="[('state','=','Activo')]" help="Grupos Activos"/>
+                <filter name="Baja" string="Baja" domain="[('state','=','Baja')]" help="Grupos Baja"/>
+                <separator/>
+                <group expand="0" string="Agrupar por">
+                    <filter string="Estado" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="incio" domain="[]" context="{'group_by':'inicio'}"/>
+                    <filter string="fin" domain="[]" context="{'group_by':'fin'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="gestion_ganaderia_grupos_action" model="ir.actions.act_window">
+        <field name="name">Grupos</field>
+        <field name="res_model">ganaderia.grupo</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+ <!-->       <field name="context">{'default_user_id':uid}</field> -->
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Haga click en nuevo para crear un nuevo grupo.
+            </p>
+            <p>
+                Use los grupos para introducir los datos de los gastos, incidentes e ingresos netos (sin incluir impuestos)
+                de los animales para poder obtener estadisticas.
+            </p>
+        </field>
+    </record>
+
+    <record id="gestion_ganaderia_animales_action" model="ir.actions.act_window">
+        <field name="name">Animales</field>
+        <field name="res_model">ganaderia.grupo.vacas</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+<!-->        <field name="context">{'search_default_user_id':uid, 'search_default_pending':1}</field>  -->
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+            Haga click en nuevo para inscribir un nuevo animal.
+            </p>
+            <p>
+            Aquí apareceran los datos de los animales.
+            </p>
+            <p>
+            Estos animales pueden ser inscritos en un grupo para llevar el control de sus gastos
+            e incidencias.
+            </p>
+        </field>
+    </record>
+
+    <record id="ganaderia_grupo_view_graph" model="ir.ui.view">
+        <field name="name">ganaderia.grupo.graph</field>
+        <field name="model">ganaderia.grupo</field>
+        <field name="arch" type="xml">
+            <graph string="Grupos">
+                <field name="name"/>
+                <field name="beneficio" string="Beneficio grupos" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="ganaderia_grupo_view_pivot" model="ir.ui.view">
+        <field name="name">ganaderia.grupo.pivot</field>
+        <field name="model">ganaderia.grupo</field>
+        <field name="arch" type="xml">
+            <pivot string="Grupos">
+                <field name="name"/>
+                <field name="beneficio" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="ganaderia_grupo_view_form" model="ir.ui.view">
+        <field name="name">ganaderia.grupo.form.view</field>
+        <field name="model">ganaderia.grupo</field>
+        <field name="arch" type="xml">
+            <form string="Grupos">
+                <header>
+                    <button name="set_Activo" string="Activar grupo" type="object" attrs="{'invisible': [('state','=','Activo')]}" class="oe_highlight"/>
+                    <button name="set_Baja" string="Baja grupo" type="object" attrs="{'invisible': [('state','in','Baja')]}"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet string="Grupos">
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" requiered="1"/>
+                        </h1>
+                    </div>
+                    <group name="main">
+                        <group>
+                            <label for="inicio" string="inicio"/>
+                            <field name="inicio" required="1" nolabel="1"/>
+                            <field name="fin"/>
+                        </group>
+                        <group>
+                            
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Actuaciones" id="lines">
+                            <div>
+                                <field name="animales_ids">
+                                    <tree editable="bottom">
+                                        <field name="name" string="Animal"/>
+                                        <field name="sexo"/>
+                                        <field name="nacimiento"/>
+                                        <field name="baja"/>
+                                        <field name="state"/>
+                                        <field name="ingreso"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="ingreso_subtotal" string ="Ingesos Animales" class="oe_subtotal_footer_separator" widget="monetary" modifiers="{'readonly': true}" />
+                                </group>
+                            </div>
+                        </page>
+                    </notebook>
+                    <div>
+                        <field name="description" string="Observaciones"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ganaderia_grupo_view_list" model="ir.ui.view">
+        <field name="name">ganaderia.grupo.list</field>
+        <field name="model">ganaderia.grupo</field>
+        <field name="arch" type="xml">
+            <tree string="Grupos" decoration-info="state=='Activo'" decoration-muted="state=='Baja'">
+                <field name="name" string="Grupo"/>
+                <field name="inicio" string="Fecha inicio"/>
+                <field name="fin" string="Fecha fin"/>
+                <field name="beneficio" string="Benefcio"/>
+                <field name="state" string="Estado"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ganaderia_grupo_vacas_view_list" model="ir.ui.view">
+        <field name="name">ganaderia.grupo.vacas.list</field>
+        <field name="model">ganaderia.grupo.vacas</field>
+        <field name="arch" type="xml">
+            <tree string="Grupos" decoration-info="state=='Adulto'" decoration-success="state=='Crecimiento'" decoration-muted="state=='Baja'">
+                <field name="name" string="Grupo"/>
+                <field name="sexo" string="Sexo"/>
+                <field name="nacimiento" string="Fecha nacimiento"/>
+                <field name="baja" string="Fecha baja"/>
+                <field name="madre" string="madre"/>
+                <field name="ingreso" string"Precio venta"/>
+                <field name="state" string="Estado"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ganaderia_grupo_view_form" model="ir.ui.view">
+        <field name="name">ganaderia.grupo.form.view</field>
+        <field name="model">ganaderia.grupo</field>
+        <field name="arch" type="xml">
+            <form string="Grupos">
+                <header>
+                    <button name="set_Activo" string="Activar grupo" type="object" attrs="{'invisible': [('state','=','Activo')]}" class="oe_highlight"/>
+                    <button name="set_Baja" string="Baja grupo" type="object" attrs="{'invisible': [('state','in','Baja')]}"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet string="Grupos">
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" requiered="1"/>
+                        </h1>
+                    </div>
+                    <group name="main">
+                        <group>
+                            <label for="inicio" string="inicio"/>
+                            <field name="inicio" required="1" nolabel="1"/>
+                            <field name="fin"/>
+                        </group>
+                        <group>
+                            
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Actuaciones" id="lines">
+                            <div>
+                                <field name="animales_ids">
+                                    <tree editable="bottom">
+                                        <field name="name" string="Animal"/>
+                                        <field name="sexo"/>
+                                        <field name="nacimiento"/>
+                                        <field name="baja"/>
+                                        <field name="state"/>
+                                        <field name="ingreso"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="ingreso_subtotal" string ="Ingesos Animales" class="oe_subtotal_footer_separator" widget="monetary" modifiers="{'readonly': true}" />
+                                </group>
+                            </div>
+                        </page>
+                    </notebook>
+                    <div>
+                        <field name="description" string="Observaciones"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ganaderia_grupo_vacas_view_form" model="ir.ui.view">
+        <field name="name">ganaderia.grupo.vacas.form.view</field>
+        <field name="model">ganaderia.grupo.vacas</field>
+        <field name="arch" type="xml">
+            <form string="Animales">
+                <header>
+                    <button name="set_Crecimiento" string="Crecimiento" type="object" attrs="{'invisible': [('state','=','Crecimiento')]}" class="oe_highlight"/>
+                    <button name="set_Adulto" string="Adulto" type="object" attrs="{'invisible': [('state','in','Adulto')]}"/>
+                    <button name="set_Baja" string="Baja" type="object" attrs="{'invisible': [('state','in','Baja')]}"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet string="Animal">
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" requiered="1"/>
+                        </h1>
+                    </div>
+                    <group name="main">
+                        <group>
+                            <label for="nacimiento" string="nacimiento"/>
+                            <field name="nacimiento" required="1" nolabel="1"/>
+                            <field name="sexo"/>
+                            <field name="madre"/>
+                            <field name="baja">
+                            <field name="grupo_id">
+                        </group>
+                        <group>
+
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Actuaciones" id="lines">
+                            <div>
+                                <field name="animales_ids">
+                                    <tree editable="bottom">
+                                        <field name="name" string="Animal"/>
+                                        <field name="sexo"/>
+                                        <field name="nacimiento"/>
+                                        <field name="baja"/>
+                                        <field name="state"/>
+                                        <field name="ingreso"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="ingreso_subtotal" string ="Ingesos Animales" class="oe_subtotal_footer_separator" widget="monetary" modifiers="{'readonly': true}" />
+                                </group>
+                            </div>
+                        </page>
+                    </notebook>
+                    <div>
+                        <field name="description" string="Observaciones"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Menuitems -->
+    <menuitem id="menu_gestion_ganadera_root" name="Animales" sequence="9"/>
+
+    <menuitem id="menu_gestion_ganadera" name="Animales" parent="menu_gestion_ganadera_root" sequence="1"/>
+    <menuitem action="gestion_ganaderia_animales_action" id="menu_gestion_ganaderia_animales" sequence="2" parent="menu_gestion_ganadera"/>
+    <menuitem action="gestion_ganaderia_grupos_action" id="menu_gestion_ganaderia_grupos" sequence="1" parent="menu_gestion_ganadera"/>
+
+
+</odoo>
