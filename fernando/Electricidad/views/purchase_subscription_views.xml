@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    © 2019 jhformatic & Pereira
+    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+ -->
+<odoo>
+    <!-- Subscriptions -->
+    <record id="gestion_electricidad_view_search" model="ir.ui.view">
+        <field name="name">gestion.electricidad.search</field>
+        <field name="model">gestion.electricidad</field>
+        <field name="arch" type="xml">
+            <search string="Contratos">
+                <field name="name" string="Contract"/>
+                <field name="date"/>
+                <field name="partner_id" operator="child_of"/>
+                <field name="user_id"/>
+                <field name="code"/>
+                <filter name="pendiente" string="Pendiente" domain="[('pendiente','=','True')]"/>
+                <filter name="new" string="Nuevo" domain="[('state','=','draft')]" help="Nuevos contratos"/>
+                <filter name="open" string="Alta" domain="[('state','=','open')]" help="Contratos en situación de alta"/>
+                <filter name="pending" string="Renovar" domain="[('state','=','pending')]" help="Contratos con fecha próxima de vencimiento"/>
+                <filter name="closed" string="Baja" domain="[('state','=','close')]" help="Contratos en situación de baja"/>
+                <filter name="cancelled" string="Cancelado" domain="[('state','=','cancelled')]" help="Contratos cancelados"/>
+                <separator/>
+                <filter
+                    string="Vencidos"
+                    domain="[('state','in',('open','draft','pending')), '|', ('date', '!=', False), ('date', '&lt;=', time.strftime('%%Y-%%m-%%d'))]"
+                    help="Contratos vencidos" />
+                <filter
+                    string="Próximo vencimiento"
+                    domain="[('date', '!=', False), ('date', '&lt;=', (context_today() + datetime.timedelta(30)).strftime('%%Y-%%m-%%d') )]"
+                    help="Vencimiento antes de 2 meses" />
+                <separator/>
+                <filter string="Contratos sin asignar" help="Contracts that are not assigned to an account manager." domain="[('user_id', '=', False)]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Estado" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Tarifa" domain="[]" context="{'group_by':'Tarifa'}"/>
+                    <filter string="Tipo de Contrato" domain="[]" context="{'group_by':'Contrato'}"/>
+                    <filter string="Comercial" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Cliente" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter string="Mes de inicio" domain="[]" context="{'group_by' : 'date_start'}" />
+                    <filter string="Mes de finalización" domain="[]" context="{'group_by' : 'date'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="gestion_electricidad_action" model="ir.actions.act_window">
+        <field name="name">Contratos</field>
+        <field name="res_model">gestion.electricidad</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="context">{'default_user_id':uid}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Pinche en nuevo para crear un nuevo contrato.
+            </p><p>
+                Use los contratos para introducir los datos de los contratos de los clientes.
+            </p>
+        </field>
+    </record>
+
+    <record id="gestion_electricidad_action_pending" model="ir.actions.act_window">
+        <field name="name">Contratos próximo vencimiento</field>
+        <field name="res_model">gestion.electricidad</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="context">{'search_default_user_id':uid, 'search_default_pending':1}</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Pinche en nuevo para crear un nuevo contrato.
+          </p><p>
+            Aquí aparecerán los contratos cuya fecha de vencimiento es inferior a 2 meses.
+          </p><p>
+            Automaticamente aparecerán aquí los contratos con vencimiento próximo.
+          </p>
+        </field>
+    </record>
+
+    <record id="gestion_electricidad_view_graph" model="ir.ui.view">
+        <field name="name">gestion.electricidad.graph</field>
+        <field name="model">gestion.electricidad</field>
+        <field name="arch" type="xml">
+            <graph string="Contratos">
+                <field name="Tarifa"/>
+                <field name="recurring_total" string="Beneficio Total Empresa" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="gestion_electricidad_view_pivot" model="ir.ui.view">
+        <field name="name">gestion.electricidad.pivot</field>
+        <field name="model">gestion.electricidad</field>
+        <field name="arch" type="xml">
+            <pivot string="Contratos">
+                <field name="partner_id"/>
+                <field name="recurring_total" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="gestion_electricidad_view_form" model="ir.ui.view">
+        <field name="name">gestion.electricidad.form.view</field>
+        <field name="model">gestion.electricidad</field>
+        <field name="arch" type="xml">
+            <form string="Contratos">
+                <header>
+                    <button name="set_open" string="Alta Contrato" type="object"
+                            attrs="{'invisible': [('state','=','open')]}" class="oe_highlight"/>
+                    <button name="set_pending" string="Próximo Vencimiento" type="object"
+                            attrs="{'invisible': [('state','in',['pending','draft','close','cancel'])]}"/>
+                    <button name="set_close" string="Baja Contrato"
+                            type="object" attrs="{'invisible': [('state','in',['draft','close','cancel'])]}"/>
+                    <button name="set_cancel" string="Cancelar Contrato"
+                            type="object" attrs="{'invisible': [('state','in',['cancel','close'])]}"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet string="Contrato">
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name"/>
+                        </h1>
+                    </div>
+                    <group name="main">
+                        <group>
+                        	<label for="partner_id" string="Cliente"/>
+                            <field name="partner_id" required="1" nolabel="1" domain="[('customer', '=', True)]"/>
+                            <field name="code"/>
+                            <field name="Contrato"/>
+                            <field name="Tarifa" domain="[('Contrato', 'ilike', Contrato)]"/>
+                        </group>
+                        <group>
+                        	<label for="user_id" string="Comercial"/>
+                            <field name="user_id" string="Comercial" nolabel="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="date_start"/>
+                            <field name="date"/>
+                            <field name="pendiente"/>
+                        </group>
+                    </group>
+                    <group name="Suministro">
+                        <group>
+                            <label for="street" string="Punto de Suministro"/>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Calle..." class="o_address_street"/>
+                                <field name="street2" placeholder="Calle 2..." class="o_address_street"/>
+                                <field name="city" placeholder="Población" class="o_address_city"/>
+                                <field name="state_id" class="o_address_state" placeholder="Provincia" context="{'country_id': country_id, 'zip': zip}"/>
+                                <field name="zip" placeholder="C.P." class="o_address_zip"/>
+                                <field name="country_id" placeholder="País" class="o_address_country"/>
+                            </div>
+                        </group>
+                        <group>
+                                <field name="potencia_1"/>
+                                <field name="potencia_2"/>
+                                <field name="potencia_3"/>
+                                <field name="potencia_4"/>
+                                <field name="potencia_5"/>
+                                <field name="potencia_6"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Rendimientos" id="lines">
+                            <div>
+                                <field name="recurring_invoice_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="name" string="Año"/>
+                                        <field name="price_unit"/>
+                                        <field name="quantity"/>
+                                        <field name="price_subtotal"/>
+                                        <field name="buy_quantity"/>
+                                        <field name="price_subtotal_comercial"/>
+                                        <field name="user_id"/>
+                                        <field name="price_subtotal_empresa"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="recurring_total" string ="Comisión Total" class="oe_subtotal_footer_separator"
+                                        widget="monetary" modifiers="{'readonly': true}"
+                                    />
+                                    <field name="recurring_total_comercial" string ="Beneficio Total Comercial" class="oe_subtotal_footer_separator"
+                                        widget="monetary" modifiers="{'readonly': true}"
+                                    />
+                                   <field name="recurring_total_empresa" string ="Beneficio Total Empresa" class="oe_subtotal_footer_separator"
+                                        widget="monetary" modifiers="{'readonly': true}"
+                                    />  
+                                </group>
+                            </div>
+                        </page>
+                    </notebook>
+                    <div>
+                        <field name="description" string="Observaciones"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="gestion_electricidad_view_list" model="ir.ui.view">
+        <field name="name">gestion.electricidad.list</field>
+        <field name="model">gestion.electricidad</field>
+        <field name="arch" type="xml">
+            <tree string="Contratos" decoration-info="state=='draft'" decoration-danger="state=='pending'" decoration-muted="state in ('cancel','close')">
+                <field name="code" string="CUPS"/>
+                <field name="pendiente"/>
+                <field name="partner_id" string="Cliente"/>
+                <field name="date" string="Vencimiento"/>
+                <field name="user_id" string="Comercial"/>
+                <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                <field name="recurring_total" string="Beneficio Total Empresa"/>
+                <field name="state" string="Estado"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Menuitems -->
+    <menuitem id="menu_gestion_electricidad_root" name="Contratos" sequence="9" web_icon="gestion_electricidad,static/description/icon.png"/>
+
+    <menuitem id="menu_gestion_electricidad" name="Contratos" parent="menu_gestion_electricidad_root" sequence="5"/>
+    <menuitem action="gestion_electricidad_action" id="menu_gestion_electricidad_action" sequence="1" parent="menu_gestion_electricidad"/>
+    <menuitem action="gestion_electricidad_action_pending" id="menu_gestion_electricidad_pending" sequence="2" parent="menu_gestion_electricidad"/>
+
+
+</odoo>

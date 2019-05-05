@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- DEGREES-->
+        <!-- Acusmata-->
+        <record id="group_contratos" model="res.groups">
+            <field name="name">Gestion_group</field>
+            <field name="comment">Gestion contratos </field>
+        </record>
+    </data>
+</odoo>

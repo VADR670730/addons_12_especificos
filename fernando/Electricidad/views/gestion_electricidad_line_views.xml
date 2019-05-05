@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    © 2019 jhformatic & Pereira
+    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+ -->
+<odoo>
+    <!-- Subscriptions -->
+    <record id="gestion_electricidad_line_view_search" model="ir.ui.view">
+        <field name="name">gestion.electricidad.line.search</field>
+        <field name="model">gestion.electricidad.line</field>
+        <field name="arch" type="xml">
+            <search string="Beneficios Anuales">
+                <field name="p_subscription_id" string="Contrato"/>
+                <field name="name"/>
+                <field name="user_id" string="Comercial"/>
+        <!-->        <filter name="new" string="Nuevo" domain="[('p_subscription_id.state','=','draft')]" help="Nuevos contratos"/>
+                <filter name="open" string="Alta" domain="[('p_subscription_id.state','=','open')]" help="Contratos en situación de alta"/>
+                <filter name="pending" string="Renovar" domain="[('p_subscription_id.state','=','pending')]" help="Contratos con fecha próxima de vencimiento"/>
+                <filter name="closed" string="Baja" domain="[('p_subscription_id.state','=','close')]" help="Contratos en situación de baja"/>
+                <filter name="cancelled" string="Cancelado" domain="[('p_subscription_id.state','=','cancelled')]" help="Contratos cancelados"/>
+  -->              <group expand="0" string="Group By">
+                    <filter string="Año" domain="[]" context="{'group_by':'name'}"/>
+                    <filter string="Contrato" domain="[]" context="{'group_by':'p_subscription_id'}"/>
+                    <filter string="Cliente" domain="[]" context="{'group_by':'cliente_id'}"/>
+                    <filter string="Comercial" context="{'group_by':'user_id'}"/>
+     <!-->               <filter string="Mes de inicio" domain="[]" context="{'group_by' : 'date_start'}" />
+                    <filter string="Mes de finalización" domain="[]" context="{'group_by' : 'date'}" />
+      -->          </group>   
+            </search>
+        </field>
+    </record>
+
+    <record id="gestion_electricidad_line_action" model="ir.actions.act_window">
+        <field name="name">Beneficio Contratos</field>
+        <field name="res_model">gestion.electricidad.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+<!-->        <field name="context">{'default_user_id':uid}</field>   -->
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                No crear en este modelo bajo ningun concepto.
+            </p><p>
+                Use los contratos para introducir los datos de los contratos de los clientes.
+            </p>
+        </field>
+    </record>
+
+    <record id="gestion_electricidad_line_view_graph" model="ir.ui.view">
+        <field name="name">gestion.electricidad.line.graph</field>
+        <field name="model">gestion.electricidad.line</field>
+        <field name="arch" type="xml">
+            <graph string="Beneficio Contratos">
+                <field name="name"/>
+                <field name="price_subtotal" string="Comision Total" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="gestion_electricidad_line_view_pivot" model="ir.ui.view">
+        <field name="name">gestion.electricidad.line.pivot</field>
+        <field name="model">gestion.electricidad.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Beneficio Contratos">
+                <field name="name"/>
+                <field name="price_subtotal" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="gestion_electricidad_line_view_list" model="ir.ui.view">
+        <field name="name">gestion.electricidad.line.list</field>
+        <field name="model">gestion.electricidad.line</field>
+        <field name="arch" type="xml">
+            <tree string="Beneficio Contratos">
+                <field name="name"/>
+                <field name="p_subscription_id" string="Contrato"/>
+                <field name="cliente_id" string="Cliente"/>
+                <field name="price_unit" string="Beneficio Suministradora"/>
+                <field name="quantity" string="Comisión porcentaje"/>
+                <field name="buy_quantity" string="Comercial porcentaje"/>
+                <field name="price_subtotal_comercial" string="Beneficio Comercial"/>
+                <field name="user_id" string="Comercial"/>
+                <field name="price_subtotal_empresa" string="Beneficio Total Empresa"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Menuitems -->
+    <menuitem name="Beneficios Contratos" id="menu_gestion_electricidad_line_root" sequence="12" parent="menu_gestion_electricidad_root"/>
+
+    <menuitem action="gestion_electricidad_line_action" id="menu_gestion_electricidad_line" sequence="3" parent="menu_gestion_electricidad_line_root"/>
+
+
+</odoo>

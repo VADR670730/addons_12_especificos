@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_gestion_electricidad_user,gestion.electricidad,model_gestion_electricidad,base.group_user,1,0,0,0
+access_gestion_electricidad,gestion.electricidad,model_gestion_electricidad,base.group_user,1,1,1,1
+access_gestion_electricidad_line_user,gestion.electricidad.line,model_gestion_electricidad_line,base.group_user,1,0,0,0
+access_gestion_electricidad_line,gestion.electricidad.line,model_gestion_electricidad_line,base.group_user,1,1,1,1
+access_gestion_electricidad_tarifa,gestion.electricidad.tarifa,model_gestion_electricidad_tarifa,base.group_user,1,1,1,1

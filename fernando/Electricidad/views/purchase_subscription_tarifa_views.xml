@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    © 2019 jhformatic & Pereira
+    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+ -->
+<odoo>
+    <!-- Subscriptions -->
+    <record id="gestion_electricidad_tarifa_view_search" model="ir.ui.view">
+        <field name="name">gestion.electricidad.tarifa.search</field>
+        <field name="model">gestion.electricidad.tarifa</field>
+        <field name="arch" type="xml">
+            <search string="Contratos">
+                <field name="name" string="Tarifa"/>
+                <field name="Contrato"/>
+                <separator/>
+                <filter
+                    string="Gas"
+                    domain="[('Contrato','=','gas')]"
+                    help="Contratos de gas" />
+                <filter
+                    string="Electricidad"
+                    domain="[('Contrato','=','electricidad')]"
+                    help="Contratos de electricidad" />
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Contrato" domain="[]" context="{'group_by':'Contrato'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="gestion_electricidad_tarifa_action" model="ir.actions.act_window">
+        <field name="name">Tarifas</field>
+        <field name="res_model">gestion.electricidad.tarifa</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="context">{'default_user_id':uid}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Pinche en nuevo para crear una nueva tarifa.
+            </p><p>
+                Use las tarifas en los contratos para introducir los datos en los contratos de los clientes.
+            </p>
+        </field>
+    </record>
+
+    <record id="gestion_electricidad_tarifa_view_pivot" model="ir.ui.view">
+        <field name="name">gestion.electricidad.tarifa.pivot</field>
+        <field name="model">gestion.electricidad.tarifa</field>
+        <field name="arch" type="xml">
+            <pivot string="Tarifas">
+                <field name="Contrato"/>
+                <field name="name" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="gestion_electricidad_tarifa_view_form" model="ir.ui.view">
+        <field name="name">gestion.electricidad.tarifa.form.view</field>
+        <field name="model">gestion.electricidad.tarifa</field>
+        <field name="arch" type="xml">
+            <form string="Subscription">
+                <header>
+  <!--                  <button name="set_open" string="Alta Contrato" type="object"
+                            attrs="{'invisible': [('state','=','open')]}" class="oe_highlight"/>
+                    <button name="set_pending" string="Próximo Vencimiento" type="object"
+                            attrs="{'invisible': [('state','in',['pending','draft','close','cancel'])]}"/>
+                    <button name="set_close" string="Baja Contrato"
+                            type="object" attrs="{'invisible': [('state','in',['draft','close','cancel'])]}"/>
+                    <button name="set_cancel" string="Cancelar Contrato"
+                            type="object" attrs="{'invisible': [('state','in',['cancel','close'])]}"/>
+                    <field name="state" widget="statusbar"/>    -->
+                </header>
+                <sheet string="Tarifas">
+    <!--                <div class="oe_title">
+                        <h1>
+                            <field name="display_name"/>
+                        </h1>
+                    </div>    -->
+                    <group name="Tarifa">
+                        <group>
+                        	<label for="Contrato" string="Tipo de contrato"/>
+                            <field name="Contrato" required="1" nolabel="1"/>
+                            <field name="name"/>
+                    <!--        <field name="recurring_rule_type"/>
+                            <field name="recurring_interval"/>    -->
+                        </group>
+    <!--                    <group>
+                        	<label for="user_id" string="Comercial"/>
+                            <field name="user_id" string="Comercial" nolabel="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="date_start"/>
+                            <field name="date"/>
+                        </group>  -->
+                    </group>
+  <!--                  <notebook>
+                        <page string="Subscription Lines" id="lines">
+                            <div>
+                                <field name="recurring_invoice_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="name" string="Observaciones"/>
+                                        <field name="price_unit"/>
+                                        <field name="quantity" groups="base.group_no_one"/>
+                                        <field name="actual_quantity"/>
+                                        <field name="buy_quantity"/>
+                                        <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                        <field name="price_subtotal"/>
+                                        <field name="price_subtotal_comercial"/>
+
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="recurring_total" string ="Beneficio Total Empresa" class="oe_subtotal_footer_separator"
+                                        widget="monetary" modifiers="{'readonly': true}"
+                                    />
+                                </group>
+                            </div>
+                        </page>
+                    </notebook>
+                    <div>
+                        <field name="description" string="Observaciones"/>
+                    </div>   -->
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="gestion_electricidad_tarifa_view_list" model="ir.ui.view">
+        <field name="name">gestion.electricidad.tarifa.list</field>
+        <field name="model">gestion.electricidad.tarifa</field>
+        <field name="arch" type="xml">
+            <tree string="Tarifas" decoration-info="Contrato=='electricidad'" decoration-danger="Contrato=='gas'">
+                <field name="Contrato" string="Tipo de Contrato"/>
+                <field name="name" string="Tarifa"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Menuitems -->
+
+    <menuitem id="menu_gestion_electricidad_tarifa" name="Tarifas" parent="menu_gestion_electricidad_root" sequence="9"/>
+    <menuitem action="gestion_electricidad_tarifa_action" id="menu_gestion_electricidad_tarifa_action" sequence="5" parent="menu_gestion_electricidad_tarifa"/>
+
+
+</odoo>

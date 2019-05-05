@@ -22,22 +22,22 @@
 from odoo import api, models
 
 
-class product_template(models.Model):
-    _inherit = "product.template"
+class product_product(models.Model):
+    _inherit = "product.product"
 
     @api.multi
     def name_get(self):
         if self._context.get('temp'):
-            return super(product_template, self).name_get()
+            return super(product_product, self).name_get()
         product_list = []
         pricelist = self.env['product.pricelist'].browse(self._context.get('pricelist'))
         if pricelist:
             for record in pricelist.item_ids:
-#                if record.applied_on == '0_product_variant':
+                if record.applied_on == '0_product_variant':
                     product_list.append(record.product_id.id)
         if product_list:
             self = self.browse(product_list)
-        result = super(product_template, self).name_get()
+        result = super(product_product, self).name_get()
         return result
 
 

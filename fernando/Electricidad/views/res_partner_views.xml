@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    © 2019 jhformatic & Pereira 
+    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
+ -->
+<odoo>
+    <record id="gestion_electricidad_action_res_partner" model="ir.actions.act_window">
+        <field name="context">{'search_default_partner_id': [active_id], 'default_partner_id': active_id}</field>
+        <field name="name">Contratos</field>
+        <field name="res_model">gestion.electricidad</field>
+    </record>
+
+    <record id="res_partner_view_inherit_gestion_electricidad" model="ir.ui.view">
+        <field name="name">partner.view.button.contracts_count_po</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="priority" eval="23"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object" name="gestion_electricidad_action_res_partner" icon="fa-book">
+                    <field name="po_subscription_count" string="Contratos" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='website']" position="before">
+                <field name="dni"/>   
+            </xpath>  
+        </field>
+    </record>
+</odoo>
