@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+        <xpath expr="//field[@name='date_order']" position="replace"/>
+            <xpath expr="//field[@name='validity_date']" position="replace">
+                <field name="date_order"/>
+            </xpath>
+            <xpath expr="//field[@name='client_order_ref']" position="replace"/>
+            <xpath expr="//field[@name='partner_id']" position='after'>
+                <field name="telefono"/>
+                <field name="vehiculo"/>
+                <field name="client_order_ref" string="matricula"/>
+                <field name="recogido" string="Asistido"/>
+            </xpath>
+            <xpath expr="//field[@name='date_order']" position="after">
+                <field name="referencia"/>
+                <field name="comentarios" string="Comentarios" placeholder=" (Lugar de recogida y entrega, ruta realizada, avería)"/>
+            </xpath>
+            <xpath expr="//field[@name='pricelist_id']" position="replace"/>
+            <xpath expr="//field[@name='order_line']" position="before">
+                <group>
+                    <group>
+                        <field name="pricelist_id" string="Complemento"/>
+                        <field name="categ_id" string="Acción"/>
+                        <field name="remolque" string="Tipo de vehiculo" domain="[('name', 'ilike', categ_id)]"/>
+                    </group>
+                    <group>
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='product_id']"  position="before">
+<!--        <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='product_id']" position="before"> -->
+                <field name="pricelist_id"/>
+            </xpath>
+<!-->            <xpath expr="/form/sheet/notebook/page/field[@name='order_lines']/tree/field[@name='product_id']" position="attributes">
+                <attribute name="domain"></attribute>
+            </xpath>   -->
+            <xpath expr="//field[@name='order_line']/form//field[@name='product_id']" position="attributes">
+                <attribute name="domain">[('categ_id', '=', parent.remolque)]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='product_id']" position="attributes">
+                <attribute name="domain">[('categ_id', '=', parent.remolque)]</attribute>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

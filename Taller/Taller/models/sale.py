@@ -10,10 +10,18 @@ class sale_order_extra(models.Model):
     referencia = fields.Char(string="Referencia", size=30)
     recogido = fields.Char(string="Asistido", size=40)
     comentarios = fields.Text(string="Comentarios")
-    categ_id = fields.Many2one(string="Tipo de vehiculo", comodel_name="product.category", domain="[('type', '=', remolque)]", ondelete="cascade")
-    remolque = fields.Many2one(string="Acción", comodel_name="product.category.accion", ondelete="cascade", help="Selecciona la acción a realizar.")
+    #    categ_id = fields.Many2one(string="Tipo de vehiculo", comodel_name="product.category", domain="[('name', 'like', remolque)]", ondelete="cascade")
+    remolque = fields.Many2one(string="Tipo de vehiculo", comodel_name="product.category", ondelete="cascade", help="Selecciona la acción a realizar.")
+    categ_id = fields.Selection(string="Acción",
+                                selection=[
+                                    ('Remolque', 'Remolque'),
+                                    ('Rep in Situ', 'Rep in Situ'),
+                                    ('Suplidos', 'Suplidos'),
+                                    ('Alquiler', 'Alquiler'),
+                                ],
+                                )
 
-        @api.multi
+    @api.multi
     def _prepare_invoice(self):
         """
         Prepare the dict of values to create the new invoice for a sales order. This method may be
@@ -63,7 +71,7 @@ class sale_order_line_extra(models.Model):
         vals['pricelist_id'] = pricelist_id
         self.update(vals)
 
-        @api.multi
+    @api.multi
     def _prepare_invoice_line(self, qty):
         """
         Prepare the dict of values to create the new invoice line for a sales order line.

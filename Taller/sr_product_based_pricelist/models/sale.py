@@ -51,6 +51,7 @@ class SaleOrderLine(models.Model):
             return {'domain': {'product_uom': []}}
 
         vals = {}
+#        remolque = self.order_id.remolque.id
         domain = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
         if not self.product_uom or (self.product_id.uom_id.id != self.product_uom.id):
             vals['product_uom'] = self.product_id.uom_id
@@ -61,7 +62,8 @@ class SaleOrderLine(models.Model):
             quantity=vals.get('product_uom_qty') or self.product_uom_qty,
             date=self.order_id.date_order,
             pricelist=self.order_id.pricelist_id.id,
-            uom=self.product_uom.id
+            uom=self.product_uom.id,
+            categ_id=self.order_id.remolque.id,
         )
         result = {'domain': domain}
 
@@ -78,7 +80,7 @@ class SaleOrderLine(models.Model):
                 self.product_id = False
                 return result
 
-        name = product.with_context(temp=True).name_get()[0][1]
+        name = product.with_context(temp=True, categ_id=self.order_id.remolque.id).name_get()[0][1]
         if product.description_sale:
             name += '\n' + product.description_sale
         vals['name'] = name
