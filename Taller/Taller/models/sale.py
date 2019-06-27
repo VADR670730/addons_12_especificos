@@ -1,6 +1,19 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from datetime import datetime, timedelta
+from functools import partial
+from itertools import groupby
+from dateutil.relativedelta import relativedelta
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools.misc import formatLang
+from odoo.osv import expression
+from odoo.tools import float_is_zero, float_compare
+
+from odoo.addons import decimal_precision as dp
+
+from werkzeug.urls import url_encode
+
 
 class sale_order_extra(models.Model):
     _inherit = 'sale.order'
@@ -13,13 +26,19 @@ class sale_order_extra(models.Model):
     #    categ_id = fields.Many2one(string="Tipo de vehiculo", comodel_name="product.category", domain="[('name', 'like', remolque)]", ondelete="cascade")
     remolque = fields.Many2one(string="Tipo de vehiculo", comodel_name="product.category", ondelete="cascade", help="Selecciona la acción a realizar.")
     categ_id = fields.Selection(string="Acción",
-                                selection=[
-                                    ('Remolque', 'Remolque'),
-                                    ('Rep in Situ', 'Rep in Situ'),
+                                selection=[('Remolque', 'Remolque'),('Rep in Situ', 'Rep in Situ'),
                                     ('Suplidos', 'Suplidos'),
                                     ('Alquiler', 'Alquiler'),
                                 ],
                                 )
+    mes = fields.Char(string="mes", compute="_compute_year")
+
+    def _compute_year(self):
+        vals = {}
+        """ Calcula mes sale order para establecer secuencia sale order """
+        mydate = self.date_order.strftime("%B")
+        vals['mes'] = mydate
+        self.update(vals)
 
     @api.multi
     def _prepare_invoice(self):
@@ -57,10 +76,35 @@ class sale_order_extra(models.Model):
         }
         return invoice_vals
 
+    '''
+    @api.model
+    def create(self, vals):
+        if vals.get('name', _('New')) == _('New'):
+            if vals.get('client_order_ref') == "abc":
+                if 'company_id' in vals:
+                    vals['name'] = "a" + self.env['ir.sequence'].with_context(force_company=vals['company_id']).next_by_code('sale.orderenero') or _('New')
+                else:
+                    vals['name'] = self.env['ir.sequence'].next_by_code('sale.order') or _('New')
+            else:
+                vals['name'] = "mal" + self.env['ir.sequence'].next_by_code(
+                    'sale.order') or _('New')
+
+        # Makes sure partner_invoice_id', 'partner_shipping_id' and 'pricelist_id' are defined
+        if any(f not in vals for f in ['partner_invoice_id', 'partner_shipping_id', 'pricelist_id']):
+            partner = self.env['res.partner'].browse(vals.get('partner_id'))
+            addr = partner.address_get(['delivery', 'invoice'])
+            vals['partner_invoice_id'] = vals.setdefault('partner_invoice_id', addr['invoice'])
+            vals['partner_shipping_id'] = vals.setdefault('partner_shipping_id', addr['delivery'])
+            vals['pricelist_id'] = vals.setdefault('pricelist_id', partner.property_product_pricelist and partner.property_product_pricelist.id)
+        result = super(sale_order_extra, self).create(vals)
+        return result
+'''
+
+
 class sale_order_line_extra(models.Model):
     _inherit = 'sale.order.line'
 
-    pricelist_id = fields.Many2one(string="Complemento", readonly=True, comodel_name="product.pricelist", store=True)
+    pricelist_id = fields.Many2one(string="Complemento", readonly=False, comodel_name="product.pricelist", store=True)
     price_unit = fields.Float(onchange="compute_pricelist_id")
 
     @api.multi

@@ -51,8 +51,9 @@ class SaleOrderLine(models.Model):
             return {'domain': {'product_uom': []}}
 
         vals = {}
-#        remolque = self.order_id.remolque.id
+        #        remolque = self.order_id.remolque.id
         domain = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
+        domain = {'product_id': [('categ_id', '=', self.order_id.remolque.id)]}
         if not self.product_uom or (self.product_id.uom_id.id != self.product_uom.id):
             vals['product_uom'] = self.product_id.uom_id
             vals['product_uom_qty'] = 1.0

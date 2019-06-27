@@ -1,52 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="view_order_form" model="ir.ui.view">
-        <field name="name">sale.order.form</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form" />
+    <record id="view_partner_form_tarifa" model="ir.ui.view">
+        <field name="name">res.partner.form.tarifa</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
-        <xpath expr="//field[@name='date_order']" position="replace"/>
-            <xpath expr="//field[@name='validity_date']" position="replace">
-                <field name="date_order"/>
-            </xpath>
-            <xpath expr="//field[@name='client_order_ref']" position="replace"/>
-            <xpath expr="//field[@name='partner_id']" position='after'>
-                <field name="telefono"/>
-                <field name="vehiculo"/>
-                <field name="client_order_ref" string="matricula"/>
-                <field name="recogido" string="Asistido"/>
-            </xpath>
-            <xpath expr="//field[@name='date_order']" position="after">
-                <field name="referencia"/>
-                <field name="comentarios" string="Comentarios" placeholder=" (Lugar de recogida y entrega, ruta realizada, avería)"/>
-            </xpath>
-            <xpath expr="//field[@name='pricelist_id']" position="replace"/>
-            <xpath expr="//field[@name='order_line']" position="before">
-                <group>
-                    <group>
-                        <field name="pricelist_id" string="Complemento"/>
-                        <field name="categ_id" string="Acción"/>
-                        <field name="remolque" string="Tipo de vehiculo" domain="[('name', 'ilike', categ_id)]"/>
-                    </group>
-                    <group>
-                    </group>
-                </group>
-            </xpath>
-            <xpath expr="//field[@name='order_line']/tree//field[@name='product_id']"  position="before">
-<!--        <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='product_id']" position="before"> -->
-                <field name="pricelist_id"/>
-            </xpath>
-<!-->            <xpath expr="/form/sheet/notebook/page/field[@name='order_lines']/tree/field[@name='product_id']" position="attributes">
-                <attribute name="domain"></attribute>
-            </xpath>   -->
-            <xpath expr="//field[@name='order_line']/form//field[@name='product_id']" position="attributes">
-                <attribute name="domain">[('categ_id', '=', parent.remolque)]</attribute>
-            </xpath>
-            <xpath expr="//field[@name='order_line']/tree//field[@name='product_id']" position="attributes">
-                <attribute name="domain">[('categ_id', '=', parent.remolque)]</attribute>
-            </xpath>
-
+        <xpath expr="//page[@name='sales_purchases']" position="after">
+            <page name="Complementos" string="Complementos">
+                <field name="prices_ids">
+                    <tree editable="top" string="Complementos">
+                        <field name="applied_on" string="Applicable On"/>
+                        <field name="partner_id" invisible="1"/>
+                        <field name="product_categ_id" string="Acción"/>
+                        <field name="product_id" domain="[('categ_id', '=', product_categ_id)]"/>
+                        <field name="min_quantity" invisible="1"/>
+                        <field name="date_start" invisible="1"/>
+                        <field name="date_end" invisible="1"/>
+                        <field name="compute_price"/>
+                        <field name="fixed_price"/>
+                        <field name="price" string="Price" invisible="1"/>
+                        <field name="base" invisible="1"/>
+                        <field name="price_discount" string="% Recargo" invisible="0"/>
+                    </tree> 
+                </field>
+            </page>
+        </xpath>
         </field>
     </record>
+
+<!--    <record id="view_roduct_pricelist_view_mod" model="ir.ui.view">
+        <field name="name">product.pricelits_view_mod</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view" />
+        <field name="arch" type="xml">
+        <xpath expr="//field[@name='discount_policy']" position="before">
+            <field name="partner_id"/>
+        </xpath>
+        <xpath expr="//field[@name='item_ids']" position="replace">
+                <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}">
+                    <tree editable="top" string="Complementos">
+                        <field name="applied_on" string="Applicable On"/>
+                        <field name="partner_id" invisible="1"/>
+                        <field name="product_categ_id" string="Acción"/>
+                        <field name="product_id"/>
+                        <field name="min_quantity"/>
+                        <field name="date_start" invisible="1"/>
+                        <field name="date_end" invisible="1"/>
+                        <field name="compute_price"/>
+                        <field name="fixed_price"/>
+                        <field name="price" string="Price" invisible="1"/>
+                        <field name="base" invisible="1"/>
+                        <field name="price_discount" invisible="1"/>
+                    </tree> 
+                </field>
+           
+        </xpath>
+        </field>
+    </record> -->
+
+<!--    <record id="product_pricelist_item_form_view_mod" model="ir.ui.view">
+        <field name="name">product.pricelist.item.form.mod</field>
+        <field name="model">product.pricelist.item</field>
+        <field name="inherit_id" ref="product.product_pricelist_item_form_view" />
+        <field name="arch" type="xml">
+        <xpath expr="//field[@name='fixed_price']" position="replace">
+            <field name="fixed_price" nolabel= "1" options="{'currency_field': 'currency_id'}"/></div>
+        </xpath>
+        </field>
+    </record> -->
 </odoo>

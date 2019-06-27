@@ -25,9 +25,9 @@
             <xpath expr="//field[@name='order_line']" position="before">
                 <group>
                     <group>
-                        <field name="pricelist_id" string="Complemento"/>
+                        <field name="pricelist_id" string="Complemento"  domain="[('partner_id', '=', partner_id)]"/>
                         <field name="categ_id" string="Acción"/>
-                        <field name="remolque" string="Tipo de vehiculo" domain="[('name', 'ilike', categ_id)]"/>
+                        <field name="remolque" string="Tipo de vehiculo" domain="[('categ_id', '=', categ_id)]"/>
                     </group>
                     <group>
                     </group>
@@ -49,4 +49,58 @@
 
         </field>
     </record>
+
+    <record id="invoice_form_taller" model="ir.ui.view">
+        <field name="name">account.invoice.form.taller</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml"> 
+        <xpath expr="//field[@name='partner_id']" position='after'>
+            <field name="telefono"/>   
+            <field name="vehiculo"/>
+            <field name="matricula"/>
+            <field name="recogido" string="Asistido"/>
+        </xpath>   
+        <xpath expr="//field[@name='date_invoice']" position="after">
+            <field name="referencia"/>
+            <field name="comentarios" string="Comentarios" placeholder=" (Lugar de recogida y entrega, ruta realizada, avería)"/>
+        </xpath>
+        <xpath expr="//field[@name='pricelist_id']" position="replace"/>
+        <xpath expr="//button[@name='button_update_prices_from_pricelist']" position="replace"/>
+        <xpath expr="//field[@name='invoice_line_ids']" position="before">
+            <group>
+                <group>
+                    <field name="pricelist_id" string="Complemento"  domain="[('partner_id', '=', partner_id)]"/>
+                    <button type="object" name="button_update_prices_from_pricelist" string="Actualizar Precios" attrs="{'invisible': ['|', ('pricelist_id', '=', False), ('state', 'not in', ['draft'])]}" help="Update price in lines from the pricelist"/>
+
+                    <field name="categ_id" string="Acción"/>
+                    <field name="remolque" string="Tipo de vehiculo" domain="[('categ_id', '=', categ_id)]"/>
+                </group>
+                <group>
+                </group>
+            </group>
+        </xpath>
+        <xpath expr="//field[@name='invoice_line_ids']/tree//field[@name='product_id']"  position="before">
+            <field name="complemento"/>
+        </xpath>
+        <xpath expr="//field[@name='invoice_line_ids']/tree//field[@name='product_id']" position="attributes">
+            <attribute name="domain">[('categ_id', '=', parent.remolque)]</attribute>
+        </xpath> 
+
+        </field>
+
+    </record>  
+
+    <record id="product_category_form_accion_view" model="ir.ui.view">
+            <field name="name">product.category.accion.form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                
+                    <xpath expr="//field[@name='parent_id']" position="before">
+                        <field name="categ_id"/>
+                    </xpath>
+                
+            </field>
+        </record>
 </odoo>

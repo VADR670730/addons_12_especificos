@@ -1,21 +1,20 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
 
-class product_category_type(models.Model):
-    _name = 'product.category.accion'
-    _description = 'accion en categoria productos'
+class ProductCategory(models.Model):
+    _inherit = "product.category"
 
-    name = fields.Char(string="Acción", size=50)
+    categ_id = fields.Selection(string="Acción",selection=[('Remolque', 'Remolque'),('Rep in Situ', 'Rep in Situ'),('Suplidos', 'Suplidos'),('Alquiler', 'Alquiler'),],)
 
 class product_pricelist_partner(models.Model):
     _inherit = 'product.pricelist'
 
-    partner_id = fields.Many2one( string="Compañia", comodel_name="res.partner", domain="[('customer', '=', True)]", ondelete="cascade")
+    partner_id = fields.Many2one( string="Compañia a aplicar", comodel_name="res.partner", domain="[('customer', '=', True)]", ondelete="cascade")
 
 class product_pricelist_item_partner(models.Model):
     _inherit = 'product.pricelist.item'
 
-    partner_id = fields.Many2one(string="Compañia", comodel_name="res.partner", domain="[('customer', '=', True)]", ondelete="cascade")
+    partner_id = fields.Many2one(string="Compañia a aplicar", comodel_name="res.partner", domain="[('customer', '=', True)]", ondelete="cascade")
     product_categ_id = fields.Many2one(string="Acción", comodel_name="product.category", ondelete="cascade")
 
     @api.multi

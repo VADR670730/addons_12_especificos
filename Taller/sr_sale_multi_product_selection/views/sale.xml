@@ -7,18 +7,35 @@
         <field name="name">sr.form.view.select.multi.product.wizard</field>
         <field name="model">sr.multi.product</field>
         <field name="arch" type="xml">
-            <form string="Select Multiple product">
+            
+            <form string="Añadir servicios">
                 <group>
+                    <field name="pricelist_id" string="Complemento"/>
+                    <field name="categ_id" string="Acción"/>
+                    <field name="remolque" string="Tipo de vehiculo" domain="[('categ_id', '=', categ_id)]"/>
+
+                </group>
+   <!-->             <group>
                     <field name="product_ids" nolabel="1">
                         <tree>
-                            <field name="name"/>
+                            <field name="name" domain="[('categ_id', '=', parent.categ_id), ('id', '=', parent.pricelist_id.item_ids)]" string="Servicios"/>
                         </tree>
+                    </field>
+                </group>   -->
+                <group>
+                    <field name="prices_ids" nolabel="1" domain="[('product_categ_id', '=', remolque), ('pricelist_id', '=', pricelist_id)]">
+                        <tree>
+                            <field name="product_id"/>
+                        </tree>
+                        <form>
+                            <field name="product_id"/>
+                        </form>
                     </field>
                 </group>
                 <footer>
-                    <button class="btn-primary" name="add_product" type="object" string="Apply"/>
+                    <button class="btn-primary" name="add_product" type="object" string="Añadir"/>
                     Or
-                    <button string="Cancel" class="oe_link" special="cancel"/>
+                    <button string="Cancelar" class="oe_link" special="cancel"/>
                 </footer>
             </form>
         </field>
@@ -41,7 +58,7 @@
         <field name="arch" type="xml">
             <header position="inside">
                 <button name="%(action_select_multi_product_wizard)d" type="action" class="btn-primary"
-                        attrs="{'invisible': [('state', '!=', 'draft')]}" string="Select Product"/>
+                        attrs="{'invisible': [('state', '!=', 'draft')]}" string="Seleccionar Servicios"/>
             </header>
 
         </field>
