@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <!-- Created new Form View for wizard-->
+    <record id="form_view_select_multi_product_wizard" model="ir.ui.view">
+        <field name="name">form.view.select.multi.product.wizard</field>
+        <field name="model">multi.product</field>
+        <field name="arch" type="xml">
+            
+            <form string="Añadir servicios">
+                <group>
+                    <field name="pricelist_id" string="Complemento"/>
+                    <field name="categ_id" string="Acción"/>
+                    <field name="remolque" string="Tipo de vehiculo" domain="[('categ_id', '=', categ_id)]"/>
+
+                </group>
+   <!-->             <group>
+                    <field name="product_ids" nolabel="1">
+                        <tree>
+                            <field name="name" domain="[('categ_id', '=', parent.categ_id), ('id', '=', parent.pricelist_id.item_ids)]" string="Servicios"/>
+                        </tree>
+                    </field>
+                </group>   -->
+                <group>
+                    <field name="prices_ids" nolabel="1" domain="[('product_categ_id', '=', remolque), ('pricelist_id', '=', pricelist_id)]">
+                        <tree>
+                            <field name="product_id"/>
+                        </tree>
+                        <form>
+                            <field name="product_id"/>
+                        </form>
+                    </field>
+                </group>
+                <footer>
+                    <button class="btn-primary" name="add_product" type="object" string="Añadir"/>
+                    Or
+                    <button string="Cancelar" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Created new action for wizard-->
+    <record id="action_select_multi_product_invoice_wizard" model="ir.actions.act_window">
+        <field name="name">Select Multiple Product invoice</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">multi.product</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Inherit Sale Form View to Modify it -->
+    <record id="view_order_form_inherit_add_multi_product_selection_button" model="ir.ui.view">
+        <field name="name">view.order.form.inherit.add.multi.product.selection.button</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="%(action_select_multi_product_invoice_wizard)d" type="action" class="btn-primary"
+                        attrs="{'invisible': [('state', '!=', 'draft')]}" string="Seleccionar Servicios"/>
+            </header>
+
+        </field>
+    </record>
+</odoo>

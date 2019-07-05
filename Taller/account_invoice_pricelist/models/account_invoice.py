@@ -52,7 +52,7 @@ class AccountInvoiceLine(models.Model):
             partner=self.invoice_id.partner_id.id,
             quantity=self.quantity,
             date_order=self.invoice_id.date_invoice,
-            pricelist=self.invoice_id.pricelist_id.id,
+            pricelist=self.complemento.id,
             uom=self.uom_id.id,
             fiscal_position=(
                 self.invoice_id.partner_id.property_account_position_id.id)

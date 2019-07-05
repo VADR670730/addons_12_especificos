@@ -38,7 +38,7 @@
     'data': [
             'security/ir.model.access.csv',
         'views/sale.xml',
-        'views/product.xml'
+        'views/product.xml',
     ],
     'demo': [],
     "license": "AGPL-3",
