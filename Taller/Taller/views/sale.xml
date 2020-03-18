@@ -20,14 +20,18 @@
             <xpath expr="//field[@name='date_order']" position="after">
                 <field name="referencia"/>
                 <field name="comentarios" string="Comentarios" placeholder=" (Lugar de recogida y entrega, ruta realizada, avería)"/>
+                <field name="sale_order_template_id" invisible="True"/>
             </xpath>
             <xpath expr="//field[@name='pricelist_id']" position="replace"/>
+            <xpath expr="//field[@name='sale_order_template_id']" position="replace"/>
             <xpath expr="//field[@name='order_line']" position="before">
                 <group>
                     <group>
-                        <field name="pricelist_id" string="Complemento"  domain="[('partner_id', '=', partner_id)]"/>
-                        <field name="categ_id" string="Acción"/>
-                        <field name="remolque" string="Tipo de vehiculo" domain="[('categ_id', '=', categ_id)]"/>
+                        <field name="categ_id" widget="radio" string="Acción"/>
+                        <field name="remolque" widget="radio" string="Tipo de vehiculo" domain="[('categ_id', '=', categ_id)]"/>
+                    </group>
+                    <group>
+                        <field name="pricelist_id" widget="radio" string="Complemento"  domain="[('partner_id', '=', partner_id)]"/>             
                     </group>
                     <group>
                     </group>
@@ -72,7 +76,7 @@
                 <group>
                     <field name="pricelist_id" string="Complemento"  domain="[('partner_id', '=', partner_id)]"/>
                     <button type="object" name="button_update_prices_from_pricelist" string="Actualizar Precios" attrs="{'invisible': ['|', ('pricelist_id', '=', False), ('state', 'not in', ['draft'])]}" help="Update price in lines from the pricelist"/>
-
+                
                     <field name="categ_id" string="Acción"/>
                     <field name="remolque" string="Tipo de vehiculo" domain="[('categ_id', '=', categ_id)]"/>
                 </group>

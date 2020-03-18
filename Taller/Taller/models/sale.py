@@ -30,6 +30,7 @@ class sale_order_extra(models.Model):
                                     ('Suplidos', 'Suplidos'),
                                     ('Alquiler', 'Alquiler'),
                                 ],
+                                default="Remolque",
                                 )
     mes = fields.Char(string="mes", compute="_compute_year")
 
