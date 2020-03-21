@@ -27,13 +27,9 @@
             <xpath expr="//field[@name='order_line']" position="before">
                 <group>
                     <group>
+                        <field name="pricelist_id" widget="radio" string="Complemento" domain="[('partner_id', '=', partner_id)]"/>
                         <field name="categ_id" widget="radio" string="Acción"/>
                         <field name="remolque" widget="radio" string="Tipo de vehiculo" domain="[('categ_id', '=', categ_id)]"/>
-                    </group>
-                    <group>
-                        <field name="pricelist_id" widget="radio" string="Complemento"  domain="[('partner_id', '=', partner_id)]"/>             
-                    </group>
-                    <group>
                     </group>
                 </group>
             </xpath>

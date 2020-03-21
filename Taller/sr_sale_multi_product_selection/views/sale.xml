@@ -23,14 +23,22 @@
                     </field>
                 </group>   -->
                 <group>
-                    <field name="prices_ids" nolabel="1" domain="[('product_categ_id', '=', remolque), ('pricelist_id', '=', pricelist_id)]">
-                        <tree>
-                            <field name="product_id"/>
-                        </tree>
-                        <form>
-                            <field name="product_id"/>
-                        </form>
-                    </field>
+                    <group>
+                        <field name="prices_ids" nolabel="1" domain="[('product_categ_id', '=', remolque), ('pricelist_id', '=', pricelist_id)]">
+                            <tree editable="top">
+                                <field name="product_uom_qty" string="Cantidad"/>
+                                <field name="product_id" string="Servicio"/> 
+                            </tree>
+                            
+    <!--                        <form>
+                                <field name="product_id"/>
+                                <field name="product_uom_qty"/>
+                            </form>   -->
+                        </field>
+                    </group>
+
+                    <group>
+                    </group>
                 </group>
                 <footer>
                     <button class="btn-primary" name="add_product" type="object" string="Añadir"/>
@@ -60,6 +68,10 @@
                 <button name="%(action_select_multi_product_wizard)d" type="action" class="btn-primary"
                         attrs="{'invisible': [('state', '!=', 'draft')]}" string="Seleccionar Servicios"/>
             </header>
+            <xpath expr="//field[@name='order_line']" position="before">
+                        <button name="%(action_select_multi_product_wizard)d" class="btn-primary" type="action" string="Servicios"/>
+<!--                        <button name="%(action_select_multi_product_wizard)d" type="action" attrs="{'invisible': [('state', '!=', 'draft')]}" string="Seleccionar Servicios"/>
+-->            </xpath>
 
         </field>
     </record>

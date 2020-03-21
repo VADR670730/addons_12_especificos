@@ -72,8 +72,10 @@ class sale_order_extra(models.Model):
             'vehiculo': self.vehiculo,
             'recogido': self.recogido,
             'comentarios': self.comentarios,
-            'categ_id': self.categ_id.id,
+            'categ_id': self.categ_id,
             'remolque': self.remolque.id,
+            'total_original': self.amount_total,
+            'pricelist_id': self.pricelist_id.id,
         }
         return invoice_vals
 
@@ -149,6 +151,6 @@ class sale_order_line_extra(models.Model):
             'account_analytic_id': self.order_id.analytic_account_id.id,
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
             'display_type': self.display_type,
-            'pricelist_id': self.pricelist_id,
+            'complemento': self.pricelist_id.id,
         }
         return res

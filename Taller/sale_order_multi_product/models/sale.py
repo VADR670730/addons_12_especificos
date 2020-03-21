@@ -30,6 +30,7 @@ class SrpricelistItemQty(models.Model):
 class SrMultiProduct(models.TransientModel):
     _name = 'sr.multi.product'
 
+    prices_ids = fields.Many2many('product.pricelist.item', string="Precios")
     product_ids = fields.Many2many('product.product', string="Product")
     remolque = fields.Many2one(string="Tipo de vehiculo",
                                comodel_name="product.category",
@@ -47,16 +48,14 @@ class SrMultiProduct(models.TransientModel):
     pricelist_id = fields.Many2one('product.pricelist',
                                    string="Complemento",
                                    default="_default_products")
-    prices_ids = fields.Many2many('product.pricelist.item', string="Precios")
-
     @api.multi
     def add_product(self):
         for line in self.prices_ids:
             self.env['sale.order.line'].create({
                 'product_id': line.product_id.id,
-                'order_id': self._context.get('active_id'),
-                'pricelist_id': self.pricelist_id.id,
-                'product_uom_qty': line.product_uom_qty
+                'product_uom_qty': line.product_uom_qty,
+                'order_id': self.id,
+                'pricelist_id': self.pricelist_id.id
             })
         return
 
@@ -78,33 +77,13 @@ class SrMultiProduct(models.TransientModel):
         default = self._prepare_default_get(order)
         res.update(default)
         return res
-'''
-    @api.multi
-    def _default_products(self):
-        self.ensure_one()
-        active_id = self.env.context.get('active_id', False) or False
-        record = self.env['sale.order'].browse(active_id)
-        return record.pricelist_id
-'''
-'''
-    @api.multi
-    def add_product(self):
-        for record in self:
-            record.pricelist_id = self.pricelist_id.id,
-            record.categ_id = self.categ_id,
-            record.remolque = self.remolque.id,
-            for line in record.prices_ids:
-                self.env['sale.order.line'].create({
-                    'product_id': line.product_id.id,
-                    'order_id': self._context.get('active_id'),
-                    'pricelist_id': self.pricelist_id.id
-                })
-        return
 
-    @api.model
-	def default_get(self):
-		ctx = self._context
-        if ctx.get('active_model') == 'sale.order':
-        return self.env['sale.order'].browse(ctx.get('active_ids')[0]).partner_id.id
-'''
-
+'''    @api.multi
+    @api.onchange('prices_ids')
+    def _compute_user_id(self):
+        vals = {}
+        partner_id = self.pricelist_id.partner_id.id
+        vals['partner_id'] = partner_id
+        categ_id = self.product_tmpl_id.categ_id.id
+        vals['product_categ_id'] = categ_id
+        self.update(vals)   '''
