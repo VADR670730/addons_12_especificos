@@ -71,7 +71,10 @@
             <xpath expr="//field[@name='order_line']" position="before">
                         <button name="%(action_select_multi_product_wizard)d" class="btn-primary" type="action" string="Servicios"/>
 <!--                        <button name="%(action_select_multi_product_wizard)d" type="action" attrs="{'invisible': [('state', '!=', 'draft')]}" string="Seleccionar Servicios"/>
--->            </xpath>
+-->         </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='product_id']" position="before">
+                <field name="pricelist_item_id" domain="[('product_categ_id', '=', parent.remolque), ('pricelist_id', '=', parent.pricelist_id)]"/>
+            </xpath>
 
         </field>
     </record>

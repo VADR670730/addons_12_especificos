@@ -24,7 +24,20 @@ from odoo import api, fields, models
 class SrpricelistItemQty(models.Model):
     _inherit = 'product.pricelist.item'
 
-    product_uom_qty = fields.Float(string='Ordered Quantity', required=True, default=1.0)
+    product_uom_qty = fields.Float(string='Cantidad', required=True, default=1.0)
+
+class PricelistItemLine(models.Model):
+    _inherit = 'sale.order.line'
+
+    pricelist_item_id = fields.Many2one(string="Producto_2", readonly=False, comodel_name="product.pricelist.item", onchange="change_item", store=True)
+
+    @api.multi
+    @api.onchange('pricelist_item_id')
+    def change_item(self):
+        vals = {}
+        product_id = self.pricelist_item_id.product_id.id
+        vals['product_id'] = product_id
+        self.update(vals)
 
 
 class SrMultiProduct(models.TransientModel):
@@ -107,4 +120,3 @@ class SrMultiProduct(models.TransientModel):
         if ctx.get('active_model') == 'sale.order':
         return self.env['sale.order'].browse(ctx.get('active_ids')[0]).partner_id.id
 '''
-

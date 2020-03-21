@@ -21,18 +21,13 @@
 
 {
     'name': "Sale Order Multi Product Selection",
-    'version': "11.0.0.2",
-    'summary': "This module allows you to select Multiple product in sale order at a time on single click.",
+    'version': "12.0.0.1",
+    'summary': "Permite añadir varios productos filtrando en base a los campos añadidos en modulo taller",
     'category': 'Sale Management',
     'description': """
-        This module allows you to select Multiple product in sale order on single click.
-         sale order add multi product
-         product add
-         multiple product add in sale order quickly
-         easy add product in sale order on single click
-         create sale order from product
+        Permite añadir varios productos filtrando en base a los campos añadidos en modulo taller
     """,
-    'author': "Sitaram",
+    'author': "Alvaro Pereira",
     'website': " ",
     'depends': ['base', 'sale_management', 'product'],
     'data': [
@@ -42,8 +37,7 @@
     ],
     'demo': [],
     "license": "AGPL-3",
-    'images': ['static/description/banner.png'],
-    'live_test_url': 'https://youtu.be/0KFUawEdMpk',
+    'live_test_url': '',
     'installable': True,
     'application': True,
     'auto_install': False,
