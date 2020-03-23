@@ -22,6 +22,24 @@
 from odoo import api, fields, models
 
 
+class PricelistItemLine(models.Model):
+    _inherit = 'account.invoice.line'
+
+    pricelist_item_id = fields.Many2one(string="Producto_2",
+                                        readonly=False,
+                                        comodel_name="product.pricelist.item",
+                                        onchange="change_item",
+                                        store=True)
+
+    @api.multi
+    @api.onchange('pricelist_item_id')
+    def change_item(self):
+        vals = {}
+        product_id = self.pricelist_item_id.product_id.id
+        vals['product_id'] = product_id
+        self.update(vals)
+
+
 class MultiProduct(models.TransientModel):
     _name = 'multi.product'
 

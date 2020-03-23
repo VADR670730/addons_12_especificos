@@ -117,7 +117,7 @@ class sale_order_line_extra(models.Model):
         pricelist_id = self.order_id.pricelist_id.id
         vals['pricelist_id'] = pricelist_id
         self.update(vals)
-
+'''
     @api.multi
     def _prepare_invoice_line(self, qty):
         """
@@ -154,3 +154,4 @@ class sale_order_line_extra(models.Model):
             'complemento': self.pricelist_id.id,
         }
         return res
+'''

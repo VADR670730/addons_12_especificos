@@ -61,6 +61,10 @@
                         attrs="{'invisible': [('state', '!=', 'draft')]}" string="Seleccionar Servicios"/>
             </header>
 
+            <xpath expr="//field[@name='invoice_line_ids']/tree//field[@name='product_id']" position="before">
+                <field name="pricelist_item_id" string="Servicio" domain="[('product_categ_id', '=', parent.remolque), ('pricelist_id', '=', parent.pricelist_id)]"/>
+            </xpath>
+
         </field>
     </record>
 </odoo>
