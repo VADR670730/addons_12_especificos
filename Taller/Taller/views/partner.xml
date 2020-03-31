@@ -26,6 +26,11 @@
                 </field>
             </page>
         </xpath>
+
+        <xpath expr="//field[@name='vat']" position="after">
+            <field name="journal_id" string="Numeración"/>
+        </xpath>
+
         </field>
     </record>
 

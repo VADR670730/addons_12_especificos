@@ -18,7 +18,7 @@
                 <field name="recogido" string="Asistido"/>
             </xpath>
             <xpath expr="//field[@name='date_order']" position="after">
-                <field name="referencia"/>
+                <field name="referencia" string="Referencia"/>
                 <field name="comentarios" string="Comentarios" placeholder=" (Lugar de recogida y entrega, ruta realizada, avería)"/>
                 <field name="sale_order_template_id" invisible="True"/>
             </xpath>
@@ -59,10 +59,11 @@
             <field name="vehiculo"/>
             <field name="matricula"/>
             <field name="recogido" string="Asistido"/>
-        </xpath>   
+        </xpath>
         <xpath expr="//field[@name='date_invoice']" position="after">
-            <field name="referencia"/>
+            <field name="referencia" string="Referencia"/>
             <field name="comentarios" string="Comentarios" placeholder=" (Lugar de recogida y entrega, ruta realizada, avería)"/>
+            <field name="origin"/>
         </xpath>
         <xpath expr="//field[@name='pricelist_id']" position="replace"/>
         <xpath expr="//button[@name='button_update_prices_from_pricelist']" position="replace"/>

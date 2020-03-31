@@ -53,13 +53,13 @@ class sale_order_extra(models.Model):
         if not journal_id:
             raise UserError(_('Please define an accounting sales journal for this company.'))
         invoice_vals = {
-            'name': self.client_order_ref or '',
+            'name': self.name or '',
             'origin': self.name,
             'type': 'out_invoice',
             'account_id': self.partner_invoice_id.property_account_receivable_id.id,
             'partner_id': self.partner_invoice_id.id,
             'partner_shipping_id': self.partner_shipping_id.id,
-            'journal_id': journal_id,
+            'journal_id': self.partner_invoice_id.journal_id.id or journal_id,
             'currency_id': self.pricelist_id.currency_id.id,
             'comment': self.note,
             'payment_term_id': self.payment_term_id.id,
@@ -76,6 +76,8 @@ class sale_order_extra(models.Model):
             'remolque': self.remolque.id,
             'total_original': self.amount_total,
             'pricelist_id': self.pricelist_id.id,
+            'referencia': self.referencia,
+            'matricula': self.client_order_ref,
         }
         return invoice_vals
 

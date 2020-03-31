@@ -43,7 +43,7 @@ class AccountInvoice(models.Model):
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
-    @api.onchange('product_id', 'quantity', 'uom_id')
+    @api.onchange('product_id', 'quantity', 'uom_id', 'pricelist_item_id')
     def _onchange_product_id_account_invoice_pricelist(self):
         if not self.invoice_id.pricelist_id or not self.invoice_id.partner_id:
             return

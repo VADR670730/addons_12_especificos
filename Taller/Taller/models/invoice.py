@@ -18,12 +18,13 @@ class account_invoice_line_extra(models.Model):
     _inherit = 'account.invoice.line'
 
     complemento = fields.Many2one(string="Complemento", comodel_name="product.pricelist", ondelete="cascade", store=True)
-'''    price_unit = fields.Float(onchange="compute_pricelist_id")
+    price_unit = fields.Float(onchange="compute_pricelist_id")
+    quantity = fields.Float(default=0.00)
 
     @api.multi
     @api.onchange('price_unit')
     def compute_pricelist_id(self):
         vals = {}
-        pricelist_id = self.order_id.pricelist_id.id
+        pricelist_id = self.invoice_id.pricelist_id.id
         vals['complemento'] = pricelist_id
-        self.update(vals)  '''
+        self.update(vals)
