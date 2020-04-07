@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_invoice_tax_347_tree" model="ir.ui.view">
+            <field name="name">account.invoice.tax_347.tree</field>
+            <field name="model">account.invoice.tax</field>
+            <field name="arch" type="xml">
+                <tree string="Lstado_347">
+                    <field name="sequence"/>
+                    <field name="manual"/>
+                    <field name="invoice_id"/>
+                    <field name="name"/>
+                    <field name="account_id" groups="account.group_account_user"/>
+                    <field name="base"/>
+                    <field name="amount_total" string="Amount"/>
+                    <field name="currency_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_invoice_tax_347_form" model="ir.ui.view">
+            <field name="name">account.invoice.tax_347.form</field>
+            <field name="model">account.invoice.tax</field>
+            <field name="arch" type="xml">
+                <form string="Listado 347">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="sequence"/>
+                        <field name="invoice_id"/>
+                        <field name="account_id" groups="account.group_account_user"/>
+                        <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                        <field name="manual"/>
+                        <field name="amount_total" string="Amount"/>
+                        <field name="base"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_invoice_tree_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_invoice_tree"/>
+        </record>
+
+        <record id="action_invoice_tree1" model="ir.actions.act_window">
+            <field name="name">Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+            <field eval="False" name="view_id"/>
+            <field name="domain">[('type','=','out_invoice')]</field>
+            <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                Create a customer invoice
+                </p>
+                <p>
+                Create invoices, register payments and keep track of the discussions with your customers.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_invoice_tree1_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="invoice_tree_with_onboarding"/>
+            <field name="act_window_id" ref="action_invoice_tree1"/>
+        </record>
+
+        <record id="action_invoice_tree1_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="invoice_form"/>
+            <field name="act_window_id" ref="action_invoice_tree1"/>
+        </record>
+
+        <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="account.menu_finance_receivables" sequence="1"/>
+
+
+    </data>
+</odoo>

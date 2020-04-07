@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_invoice_tax_347_tree" model="ir.ui.view">
+            <field name="name">account.invoice.tax_347.tree</field>
+            <field name="model">account.invoice.tax</field>
+            <field name="arch" type="xml">
+                <tree string="Lstado_347">
+                    <field name="sequence" invisible="1"/>
+                    <field name="manual" invisible="1"/>
+                    <field name="invoice_date" string="Fecha Factura"/>
+                    <field name="invoice_id"/>
+                    <field name="numero"/>
+                    <field name="origin"/>
+                    <field name="partner" string="Compañia"/>
+                    <field name="name"/>
+                    <field name="account_id" invisible="1" groups="account.group_account_user"/>
+                    <field name="base" sum="Total"/>
+                    <field name="amount_total" string="Cuantía" sum="Total"/>
+                    <field name="subtotal" string="Base + Impuesto" sum="Total"/>
+                    <field name="total" string="Total Factura" sum="Total"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="type"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_invoice_tax_347_form" model="ir.ui.view">
+            <field name="name">account.invoice.tax_347.form</field>
+            <field name="model">account.invoice.tax</field>
+            <field name="arch" type="xml">
+                <form string="Listado 347">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="sequence" invisible="1"/>
+                        <field name="invoice_id"/>
+                        <field name="origin"/>
+                        <field name="account_id" groups="account.group_account_user"/>
+                        <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                        <field name="manual"/>
+                        <field name="amount_total" string="Amount"/>
+                        <field name="base"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_invoice_tax_347_pivot" model="ir.ui.view">
+            <field name="name">account.invoice.tax_347.pivot</field>
+            <field name="model">account.invoice.tax</field>
+            <field name="arch" type="xml">
+                <pivot string="Listado 347">
+                    <field name="invoice_date" type="row"/>
+                    <field name="partner" type="col"/>
+<!--                    <field name="balance_start" type="measure"/>
+                    <field name="balance_end" type="measure"/>   -->
+                </pivot>
+            </field>
+        </record>
+
+        <record id="action_invoice_tax_347" model="ir.actions.act_window">
+            <field name="name">Listado 347</field>
+            <field name="res_model">account.invoice.tax</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,pivot</field>
+            <field eval="False" name="view_id"/>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+<!--            <field name="search_view_id" ref="view_account_invoice_filter"/>   -->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                Listado facturas para modelo 347
+                </p>
+                <p>
+                No crear ningún registro desde aquí
+                </p>
+            </field>
+        </record>
+
+        
+
+        <record id="action_invoice_tax_347_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_invoice_tax_347_tree"/>
+            <field name="act_window_id" ref="action_invoice_tax_347"/>
+        </record>
+
+        <record id="action_invoice_tax_347_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_invoice_tax_347_form"/>
+            <field name="act_window_id" ref="action_invoice_tax_347"/>
+        </record>
+
+        <record id="action_invoice_tax_347_view3" model="ir.actions.act_window.view">
+            <field eval="3" name="sequence"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="view_invoice_tax_347_pivot"/>
+            <field name="act_window_id" ref="action_invoice_tax_347"/>
+        </record>
+
+        <menuitem action="action_invoice_tax_347" id="menu_action_invoice_tax_347_tree" parent="account.menu_finance_receivables" sequence="1"/>
+
+
+    </data>
+</odoo>

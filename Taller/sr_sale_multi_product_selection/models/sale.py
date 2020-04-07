@@ -26,6 +26,7 @@ class SrpricelistItemQty(models.Model):
 
     product_uom_qty = fields.Float(string='Cantidad', required=True, default=1.0)
 
+
 class PricelistItemLine(models.Model):
     _inherit = 'sale.order.line'
 
