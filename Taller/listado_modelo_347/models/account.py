@@ -21,6 +21,36 @@
 
 from odoo import api, models, fields
 
+class AccountInvoiceTax347(models.Model):
+    _inherit = "account.invoice.tax"
+
+    origin = fields.Char(string='Servicio', related='invoice_id.origin', store='True')
+    partner = fields.Char(string='Razón Social', related='invoice_id.partner_id.name', store='True')
+    invoice_date = fields.Date(string="Fecha Factura", related='invoice_id.date_invoice', store='True')
+    vat = fields.Char(string='NIF', related='invoice_id.partner_id.vat', store='True')
+    numero = fields.Char(string='Número', related='invoice_id.number', store='True')
+    total = fields.Monetary(string='Total', related='invoice_id.amount_total', store='True')
+    subtotal = fields.Monetary(string='Subtotal', compute='_compute_subtotal_impuesto', store='True')
+    referencia = fields.Char(string="Referencia", related='invoice_id.reference')
+    type = fields.Selection([
+            ('out_invoice','Venta'),
+            ('in_invoice','Compra'),
+            ('out_refund','Customer Credit Note'),
+            ('in_refund','Vendor Credit Note'),
+        ], index=True, related='invoice_id.type', string="Tipo de factura")
+    state = fields.Selection([
+            ('draft','Borrador'),
+            ('open', 'Abierto'),
+            ('in_payment', 'Parcialmente pagada'),
+            ('paid', 'Pagada'),
+            ('cancel', 'Cancelada'),
+        ], string='Estado', index=True, related='invoice_id.state',)
+
+    @api.one
+    def _compute_subtotal_impuesto(self):
+        self.subtotal = self.base + self.amount
+
+
 '''
 class AccountInvoiceTax(models.Model):
     _name = "account.invoice.tax"
@@ -66,32 +96,3 @@ class AccountInvoiceTax(models.Model):
         for tax_line in self:
             tax_line.amount_total = tax_line.amount + tax_line.amount_rounding
 '''
-
-class AccountInvoiceTax347(models.Model):
-    _inherit = "account.invoice.tax"
-
-    origin = fields.Char(string='Servicio', related='invoice_id.origin', store='True')
-    partner = fields.Char(string='Razón Social', related='invoice_id.partner_id.name', store='True')
-    invoice_date = fields.Date(string="Fecha Factura", related='invoice_id.date_invoice', store='True')
-    vat = fields.Char(string='NIF', related='invoice_id.partner_id.vat', store='True')
-    numero = fields.Char(string='Número', related='invoice_id.number', store='True')
-    total = fields.Monetary(string='Total', related='invoice_id.amount_total', store='True')
-    subtotal = fields.Monetary(string='Subtotal', compute='_compute_subtotal_impuesto', store='True')
-
-    type = fields.Selection([
-            ('out_invoice','Venta'),
-            ('in_invoice','Compra'),
-            ('out_refund','Customer Credit Note'),
-            ('in_refund','Vendor Credit Note'),
-        ], index=True, related='invoice_id.type', string="Tipo de factura")
-    state = fields.Selection([
-            ('draft','Álbaran'),
-            ('open', 'Proforma'),
-            ('in_payment', 'Parcialmente pagada'),
-            ('paid', 'Factura'),
-            ('cancel', 'Cancelada'),
-        ], string='Estado', index=True, related='invoice_id.state',)
-
-    @api.one
-    def _compute_subtotal_impuesto(self):
-        self.subtotal = self.base + self.amount

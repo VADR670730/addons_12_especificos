@@ -10,14 +10,16 @@
                     <field name="sequence" invisible="1"/>
                     <field name="manual" invisible="1"/>
                     <field name="invoice_date" string="Fecha Factura"/>
-                    <field name="invoice_id"/>
-                    <field name="numero"/>
-                    <field name="origin"/>
+                    <field name="invoice_id" invisible="1"/>
+                    <field name="referencia" string="Referencia Factura Compra"/>
+                    <field name="numero" string="Numeración Factura"/>
+                    <field name="origin" string="Numeración venta hasta 2019"/>
                     <field name="partner" string="Compañia"/>
-                    <field name="name"/>
+                    <field name="vat" string="NIF"/>
+                    <field name="name" string="Impuesto aplicable"/>
                     <field name="account_id" invisible="1" groups="account.group_account_user"/>
-                    <field name="base" sum="Total"/>
-                    <field name="amount_total" string="Cuantía" sum="Total"/>
+                    <field name="base" string="Base Imponible" sum="Total"/>
+                    <field name="amount_total" string="Impuesto" sum="Total"/>
                     <field name="subtotal" string="Base + Impuesto" sum="Total"/>
                     <field name="total" string="Total Factura" sum="Total"/>
                     <field name="currency_id" invisible="1"/>
@@ -33,16 +35,25 @@
             <field name="arch" type="xml">
                 <form string="Listado 347">
                     <group col="4">
-                        <field name="name"/>
                         <field name="sequence" invisible="1"/>
-                        <field name="invoice_id"/>
-                        <field name="origin"/>
-                        <field name="account_id" groups="account.group_account_user"/>
-                        <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
-                        <field name="manual"/>
-                        <field name="amount_total" string="Amount"/>
-                        <field name="base"/>
+                        <field name="manual" invisible="1"/>
+                        <field name="invoice_date" string="Fecha Factura"/>
+                        <field name="invoice_id" invisible="1"/>
+                        <field name="referencia" string="Referencia Factura Compra"/>
+                        <field name="numero" string="Numeración Factura"/>
+                        <field name="origin" string="Numeración venta hasta 2019"/>
+                        <field name="partner" string="Compañia"/>
+                        <field name="vat" string="NIF"/>
+                        <field name="name"/>
+                        <field name="account_id" invisible="1" groups="account.group_account_user"/>
+                        <field name="base" sum="Total"/>
+                        <field name="amount_total" string="Cuantía" sum="Total"/>
+                        <field name="subtotal" string="Base + Impuesto" sum="Total"/>
+                        <field name="total" string="Total Factura" sum="Total"/>
                         <field name="currency_id" invisible="1"/>
+                        <field name="type"/>
+                        <field name="state"/>
+
                     </group>
                 </form>
             </field>
@@ -103,7 +114,7 @@
             <field name="act_window_id" ref="action_invoice_tax_347"/>
         </record>
 
-        <menuitem action="action_invoice_tax_347" id="menu_action_invoice_tax_347_tree" parent="account.menu_finance_receivables" sequence="1"/>
+        <menuitem action="action_invoice_tax_347" id="menu_action_invoice_tax_347_tree" parent="l10n_es_aeat.menu_root_aeat" sequence="1"/>
 
 
     </data>

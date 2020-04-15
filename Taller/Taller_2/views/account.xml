@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="invoice_form_taller_2" model="ir.ui.view">
+        <field name="name">account.invoice.form.taller_2</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='not_in_mod347']" position="replace"/>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="rectificada" string="Rectificada" groups="account.group_account_manager" attrs="{'invisible':[('state', 'not in', ('open','in_payment','paid'))]}"/>
+                <field name="not_in_mod347" groups="account.group_account_manager" attrs="{'invisible':[('state', 'not in', ('open','in_payment','paid'))]}"/>
+            </xpath>
+        </field>
+
+    </record>  
+</odoo>
