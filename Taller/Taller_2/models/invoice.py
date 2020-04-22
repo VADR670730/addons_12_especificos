@@ -5,6 +5,7 @@ class account_invoice_extra(models.Model):
     _inherit = 'account.invoice'
 
     telefono = fields.Char(copy="True")
+    number = fields.Char(related='move_id.name', store=True, readonly=False, copy=False)
     matricula = fields.Char(copy="True")
     total_original = fields.Float(copy="True")
     vehiculo = fields.Char(copy="True")
