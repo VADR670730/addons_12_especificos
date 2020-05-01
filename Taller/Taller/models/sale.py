@@ -78,6 +78,7 @@ class sale_order_extra(models.Model):
             'pricelist_id': self.pricelist_id.id,
             'referencia': self.referencia,
             'matricula': self.client_order_ref,
+            'date_invoice': self.date_order.date(),
         }
         return invoice_vals
 
@@ -104,7 +105,6 @@ class sale_order_extra(models.Model):
         result = super(sale_order_extra, self).create(vals)
         return result
 '''
-
 
 class sale_order_line_extra(models.Model):
     _inherit = 'sale.order.line'
