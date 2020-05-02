@@ -18,9 +18,14 @@
                 <field name="recogido" string="Asistido"/>
             </xpath>
             <xpath expr="//field[@name='date_order']" position="after">
+                <field name="date_invoice" string="Fecha de Servicio" invisible="1"/>
                 <field name="referencia" string="Referencia"/>
                 <field name="comentarios" string="Comentarios" placeholder=" (Lugar de recogida y entrega, ruta realizada, avería)"/>
                 <field name="sale_order_template_id" invisible="True"/>
+            </xpath>
+
+            <xpath expr="//field[@name='date_order']" position="attributes">
+                <attribute name="invisible">0</attribute>
             </xpath>
 
             <xpath expr="//field[@name='payment_term_id']" position="attributes">
@@ -68,6 +73,7 @@
         <field name="inherit_id" ref="account.invoice_form"/>
         <field name="arch" type="xml"> 
         <xpath expr="//field[@name='partner_id']" position='after'>
+            <field name="journal_id" domain="['id', '=', partner_id.journal_id.id]"/>
             <field name="telefono"/>   
             <field name="vehiculo"/>
             <field name="matricula"/>

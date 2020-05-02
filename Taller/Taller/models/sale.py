@@ -33,12 +33,15 @@ class sale_order_extra(models.Model):
                                 default="Remolque",
                                 )
     mes = fields.Char(string="mes", compute="_compute_year")
+    date_invoice = fields.Date(string="Fecha de Servicio")
 
-    def _compute_year(self):
+    def _get_time(self):
+        my_date = self.date_order
         vals = {}
         """ Calcula mes sale order para establecer secuencia sale order """
-        mydate = self.date_order.strftime("%B")
-        vals['mes'] = mydate
+        date = fields.Date.to_string(
+            fields.Date.from_string(my_date) + relativedelta(days=1))
+        vals['date_invoice'] = date
         self.update(vals)
 
     @api.multi
@@ -52,6 +55,9 @@ class sale_order_extra(models.Model):
         journal_id = self.env['account.invoice'].default_get(['journal_id'])['journal_id']
         if not journal_id:
             raise UserError(_('Please define an accounting sales journal for this company.'))
+        t_date= self.date_order
+        date = fields.Date.to_string(
+            fields.Date.from_string(t_date) + relativedelta(days=1))
         invoice_vals = {
             'name': self.name or '',
             'origin': self.name,
@@ -78,7 +84,7 @@ class sale_order_extra(models.Model):
             'pricelist_id': self.pricelist_id.id,
             'referencia': self.referencia,
             'matricula': self.client_order_ref,
-            'date_invoice': self.date_order.date(),
+            'date_invoice': date,
         }
         return invoice_vals
 
