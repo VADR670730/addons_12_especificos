@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
+<!--
     <record id="invoice_form_taller_2" model="ir.ui.view">
         <field name="name">account.invoice.form.taller_2</field>
         <field name="model">account.invoice</field>
@@ -14,4 +14,6 @@
         </field>
 
     </record>  
+
+    -->
 </odoo>

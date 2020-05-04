@@ -1,23 +1,27 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
 
+# mapping invoice type to journal type
+TYPE2JOURNAL = {
+    'out_invoice': 'sale',
+    'in_invoice': 'purchase',
+    'out_refund': 'sale',
+    'in_refund': 'purchase',
+}
+
+# mapping invoice type to refund type
+TYPE2REFUND = {
+    'out_invoice': 'out_refund',  # Customer Invoice
+    'in_invoice': 'in_refund',  # Vendor Bill
+    'out_refund': 'out_invoice',  # Customer Credit Note
+    'in_refund': 'in_invoice',  # Vendor Credit Note
+}
+
+MAGIC_COLUMNS = ('id', 'create_uid', 'create_date', 'write_uid', 'write_date')
+
+
 class account_invoice_extra(models.Model):
     _inherit = 'account.invoice'
-
-    telefono = fields.Char(copy="True")
-    number = fields.Char(related='move_id.name', store=True, readonly=False, copy=False)
-    matricula = fields.Char(copy="True")
-    total_original = fields.Float(copy="True")
-    vehiculo = fields.Char(copy="True")
-    referencia = fields.Char(copy="True")
-    recogido = fields.Char(copy="True")
-    comentarios = fields.Text(copy="True")
-    categ_id = fields.Selection(copy="True")
-    remolque = fields.Many2one(copy="True")
-    rectificada = fields.Boolean(string="No aprobada", help="Ha tenido que emitirse rectificativa", copy="False")
-'''
-
-Seria inter
 
     @api.model
     def _prepare_refund(self,
@@ -76,6 +80,13 @@ Seria inter
         values['origin'] = invoice.number
         values['payment_term_id'] = False
         values['refund_invoice_id'] = invoice.id
+        values['vehiculo'] = invoice.vehiculo
+        values['telefono'] = invoice.telefono
+        values['matricula'] = invoice.matricula
+        values['recogido'] = invoice.recogido
+        values['referencia'] = invoice.referencia
+        values['pricelist_id'] = invoice.pricelist_id.id
+        values['comentarios'] = invoice.comentarios
 
         if values['type'] == 'in_refund':
             partner_bank_result = self._get_partner_bank_id(
@@ -89,4 +100,11 @@ Seria inter
             values['name'] = description
         return values
 
-'''
+    @api.model
+    def _get_refund_modify_read_fields(self):
+        read_fields = ['type', 'number', 'invoice_line_ids', 'tax_line_ids',
+                       'date', 'telefono', 'vehiculo', 'matricula', 'recogido', 'referencia', 'comentarios']
+        return self._get_refund_common_fields() + self._get_refund_prepare_fields() + read_fields
+
+    def _get_refund_common_fields(self):
+        return ['partner_id', 'payment_term_id', 'account_id', 'currency_id', 'journal_id', 'pricelist_id']

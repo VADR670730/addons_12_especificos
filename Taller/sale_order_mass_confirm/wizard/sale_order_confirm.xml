@@ -6,9 +6,9 @@
         <field name="arch" type="xml">
             <form>
                 <footer>
-                    <button name="confirm_sale_orders" string="Confirm" type="object" class="oe_highlight"/>
+                    <button name="confirm_sale_orders" string="Confirmar" type="object" class="oe_highlight"/>
                     or
-                    <button string="Cancel" class="oe_link" special="cancel" />
+                    <button string="Cancelar" class="oe_link" special="cancel" />
                 </footer>
             </form>
         </field>
