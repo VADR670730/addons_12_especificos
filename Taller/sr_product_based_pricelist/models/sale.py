@@ -31,6 +31,7 @@ class product_product(models.Model):
             return super(product_product, self).name_get()
         product_list = []
         pricelist = self.env['product.pricelist'].browse(self._context.get('pricelist'))
+        categ_id = self.env['sale.order'].browse(self._context_get('remolque'))
         if pricelist:
             for record in pricelist.item_ids:
                 if record.applied_on == '0_product_variant':

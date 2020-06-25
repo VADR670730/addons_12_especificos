@@ -184,3 +184,14 @@ class product_pricelist_item_partner(models.Model):
         categ_id = self.product_tmpl_id.categ_id.id
         vals['product_categ_id'] = categ_id
         self.update(vals)
+'''
+class ProductProduct(models.Model):
+    _inherit='product.product'
+
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    res = super(ProductProduct, self).name_search(name='', args=None, operator='ilike', limit=100)
+
+        ids = self.search(args + [('categ_id', '=', parent.categ_id)], limit=limit)
+
+        return res
+'''
